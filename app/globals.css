@@ -41,3 +41,137 @@
     @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
   }
 }
+
+/* Article body prose styles */
+.article-body h2,
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #111827;
+}
+
+.article-body h3,
+.ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.article-body p,
+.ProseMirror p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+  color: #374151;
+}
+
+.article-body strong,
+.ProseMirror strong {
+  font-weight: 700;
+}
+
+.article-body em,
+.ProseMirror em {
+  font-style: italic;
+}
+
+.article-body ul,
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-body ol,
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-body li,
+.ProseMirror li {
+  margin-bottom: 0.25rem;
+  line-height: 1.75;
+}
+
+.article-body blockquote,
+.ProseMirror blockquote {
+  border-left: 4px solid #40916C;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #4B5563;
+  margin-bottom: 1rem;
+}
+
+.article-body a,
+.ProseMirror a {
+  color: #2563EB;
+  text-decoration: underline;
+}
+
+.article-body a:hover,
+.ProseMirror a:hover {
+  color: #1D4ED8;
+}
+
+.article-body table,
+.ProseMirror table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.article-body th,
+.ProseMirror th,
+.article-body td,
+.ProseMirror td {
+  border: 1px solid #D1D5DB;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.article-body th,
+.ProseMirror th {
+  background-color: #F3F4F6;
+  font-weight: 700;
+}
+
+.article-body img,
+.ProseMirror img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.article-body hr,
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid #E5E7EB;
+  margin: 2rem 0;
+}
+
+.article-body code,
+.ProseMirror code {
+  background-color: #F3F4F6;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+/* ProseMirror-specific */
+.ProseMirror:focus {
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9CA3AF;
+  pointer-events: none;
+  height: 0;
+}

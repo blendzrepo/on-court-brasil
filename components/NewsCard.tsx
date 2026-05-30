@@ -1,24 +1,58 @@
 import Link from "next/link";
-import { NewsArticle, getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
+import Image from "next/image";
+import type { Article } from "@/lib/types";
+import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
+
+const categoryGradients: Record<string, string> = {
+  "Grand Slam": "from-yellow-400 to-amber-500",
+  "ATP": "from-blue-400 to-blue-600",
+  "WTA": "from-pink-400 to-rose-500",
+  "Brasil": "from-green-400 to-emerald-600",
+  "Internacional": "from-purple-400 to-violet-600",
+};
+
+const categoryEmoji: Record<string, string> = {
+  "Grand Slam": "🏆",
+  "ATP": "🎾",
+  "WTA": "🎾",
+  "Brasil": "🇧🇷",
+  "Internacional": "🌎",
+};
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, "").trim();
+}
 
 interface NewsCardProps {
-  article: NewsArticle;
+  article: Article;
 }
 
 export default function NewsCard({ article }: NewsCardProps) {
-  const { title, excerpt, category, date, imageGradient, imageEmoji, slug } = article;
+  const { title, body, category, publishedAt, mainImage, slug } = article;
+  const excerpt = stripHtml(body).slice(0, 150) + (stripHtml(body).length > 150 ? "..." : "");
+  const gradient = categoryGradients[category] ?? "from-gray-400 to-gray-600";
+  const emoji = categoryEmoji[category] ?? "🎾";
 
   return (
     <article className="group bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm card-hover flex flex-col">
-      {/* Image placeholder */}
+      {/* Image */}
       <Link href={`/noticias/${slug}`} className="block relative overflow-hidden aspect-video">
-        <div
-          className={`w-full h-full bg-gradient-to-br ${imageGradient} flex items-center justify-center`}
-        >
-          <span className="text-5xl opacity-80 select-none group-hover:scale-110 transition-transform duration-300">
-            {imageEmoji}
-          </span>
-        </div>
+        {mainImage ? (
+          <Image
+            src={mainImage}
+            alt={title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div
+            className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center`}
+          >
+            <span className="text-5xl opacity-80 select-none group-hover:scale-110 transition-transform duration-300">
+              {emoji}
+            </span>
+          </div>
+        )}
         {/* Category badge overlay */}
         <span
           className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full ${getCategoryBadgeClass(category)}`}
@@ -30,10 +64,10 @@ export default function NewsCard({ article }: NewsCardProps) {
       {/* Content */}
       <div className="p-4 flex flex-col flex-1">
         <time
-          dateTime={date}
+          dateTime={publishedAt}
           className="text-xs text-gray-400 font-medium mb-2 block"
         >
-          {formatDatePT(date)}
+          {formatDatePT(publishedAt.split("T")[0])}
         </time>
 
         <Link href={`/noticias/${slug}`} className="group/title flex-1">

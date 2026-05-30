@@ -1,11 +1,12 @@
-import { newsArticles } from "@/lib/mockData";
+import { getArticles } from "@/lib/db";
 import FeaturedNews from "@/components/FeaturedNews";
 import NewsCard from "@/components/NewsCard";
 import Link from "next/link";
 
 export default function HomePage() {
-  const featured = newsArticles.find((a) => a.featured) ?? newsArticles[0];
-  const rest = newsArticles.filter((a) => a.id !== featured.id);
+  const allArticles = getArticles().filter((a) => a.published);
+  const featured = allArticles.find((a) => a.featured) ?? allArticles[0];
+  const rest = allArticles.filter((a) => a.id !== featured.id);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -30,7 +31,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rest.map((article) => (
+          {rest.slice(0, 6).map((article) => (
             <NewsCard key={article.id} article={article} />
           ))}
         </div>

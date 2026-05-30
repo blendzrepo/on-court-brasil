@@ -1,12 +1,37 @@
 import Link from "next/link";
-import { NewsArticle, getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
+import Image from "next/image";
+import type { Article } from "@/lib/types";
+import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
+
+const categoryGradients: Record<string, string> = {
+  "Grand Slam": "from-yellow-400 to-amber-500",
+  "ATP": "from-blue-400 to-blue-600",
+  "WTA": "from-pink-400 to-rose-500",
+  "Brasil": "from-green-400 to-emerald-600",
+  "Internacional": "from-purple-400 to-violet-600",
+};
+
+const categoryEmoji: Record<string, string> = {
+  "Grand Slam": "🏆",
+  "ATP": "🎾",
+  "WTA": "🎾",
+  "Brasil": "🇧🇷",
+  "Internacional": "🌎",
+};
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, "").trim();
+}
 
 interface FeaturedNewsProps {
-  article: NewsArticle;
+  article: Article;
 }
 
 export default function FeaturedNews({ article }: FeaturedNewsProps) {
-  const { title, excerpt, category, date, imageGradient, imageEmoji, slug } = article;
+  const { title, body, category, publishedAt, mainImage, slug } = article;
+  const excerpt = stripHtml(body).slice(0, 200) + (stripHtml(body).length > 200 ? "..." : "");
+  const gradient = categoryGradients[category] ?? "from-gray-400 to-gray-600";
+  const emoji = categoryEmoji[category] ?? "🎾";
 
   return (
     <article className="group relative overflow-hidden rounded-2xl bg-white shadow-md border border-gray-100 card-hover">
@@ -16,13 +41,22 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
           href={`/noticias/${slug}`}
           className="relative overflow-hidden aspect-video lg:aspect-auto"
         >
-          <div
-            className={`w-full h-full min-h-[240px] bg-gradient-to-br ${imageGradient} flex items-center justify-center`}
-          >
-            <span className="text-8xl opacity-80 select-none group-hover:scale-110 transition-transform duration-500">
-              {imageEmoji}
-            </span>
-          </div>
+          {mainImage ? (
+            <Image
+              src={mainImage}
+              alt={title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div
+              className={`w-full h-full min-h-[240px] bg-gradient-to-br ${gradient} flex items-center justify-center`}
+            >
+              <span className="text-8xl opacity-80 select-none group-hover:scale-110 transition-transform duration-500">
+                {emoji}
+              </span>
+            </div>
+          )}
           {/* Category badge */}
           <span
             className={`absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-full ${getCategoryBadgeClass(category)}`}
@@ -39,8 +73,8 @@ export default function FeaturedNews({ article }: FeaturedNewsProps) {
               Destaque
             </span>
             <span className="w-1 h-1 rounded-full bg-gray-300" />
-            <time dateTime={date} className="text-xs text-gray-400 font-medium">
-              {formatDatePT(date)}
+            <time dateTime={publishedAt} className="text-xs text-gray-400 font-medium">
+              {formatDatePT(publishedAt.split("T")[0])}
             </time>
           </div>
 
