@@ -12,10 +12,16 @@ export async function POST(request: NextRequest) {
 
     const token = await createToken();
 
+    // Só marca o cookie como `secure` quando a conexão é realmente HTTPS.
+    // Em produção atrás de um proxy, o protocolo original vem em x-forwarded-proto.
+    const forwardedProto = request.headers.get('x-forwarded-proto');
+    const isHttps =
+      forwardedProto === 'https' || request.nextUrl.protocol === 'https:';
+
     const response = NextResponse.json({ success: true }, { status: 200 });
     response.cookies.set('admin_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isHttps,
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
