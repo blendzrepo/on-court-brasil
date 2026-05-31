@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- quadra -->
+  <g opacity="0.18" stroke="#ffffff" stroke-width="4" fill="none">
+    <rect x="340" y="120" width="520" height="390" rx="6"/>
+    <line x1="340" y1="315" x2="860" y2="315"/>
+    <line x1="600" y1="120" x2="600" y2="510"/>
+    <rect x="420" y="200" width="360" height="230"/>
+    <line x1="600" y1="200" x2="600" y2="430"/>
+  </g>
+  <!-- bola -->
+  <circle cx="600" cy="315" r="58" fill="#d9f99d"/>
+  <path d="M558 280 q42 35 0 70" stroke="#365314" stroke-width="5" fill="none"/>
+  <path d="M642 280 q-42 35 0 70" stroke="#365314" stroke-width="5" fill="none"/>
+  <text x="600" y="585" text-anchor="middle" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#ffffff" opacity="0.9" letter-spacing="3">BRASIL</text>
+</svg>

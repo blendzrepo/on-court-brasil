@@ -7,8 +7,10 @@ import { useState } from "react";
 const navLinks = [
   { href: "/", label: "Notícias" },
   { href: "/calendario", label: "Calendário" },
-  { href: "/atp", label: "ATP" },
-  { href: "/wta", label: "WTA" },
+  { href: "/categoria/grand-slam", label: "Grand Slams" },
+  { href: "/categoria/atp", label: "ATP" },
+  { href: "/categoria/wta", label: "WTA" },
+  { href: "/categoria/brasil", label: "Brasil" },
 ];
 
 export default function Header() {
