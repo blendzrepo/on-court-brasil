@@ -48,10 +48,10 @@ export default function CalendarioPage() {
       {/* Page header */}
       <div className="mb-8">
         <h1 className="text-3xl font-black text-gray-900 mb-2">
-          Calendário de Torneios 2025
+          Calendário de Torneios 2026
         </h1>
         <p className="text-gray-500">
-          Todos os Grand Slams, torneios ATP e WTA da temporada em um só lugar.
+          Todos os Grand Slams, torneios ATP e WTA da temporada 2026 em um só lugar.
         </p>
       </div>
 
