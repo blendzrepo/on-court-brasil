@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
+import { CONTENT_TAG, SETTINGS_TAG } from '@/lib/revalidate';
+
 /**
- * On-demand revalidation webhook.
+ * On-demand revalidation webhook, for manual purges.
  *
- * The `on-court-cms` WordPress plugin POSTs here whenever a post, tournament or
- * setting is published, updated or deleted, so the cached CMS responses in
- * `lib/wp.ts` (tagged `wp-content` / `wp-settings`) are dropped immediately
- * instead of waiting out the 5-minute ISR window.
+ * Payload's own `afterChange` / `afterDelete` hooks already purge the cache
+ * in-process whenever an article, tournament or setting is saved, so nothing
+ * depends on this route in normal operation. It stays because being able to
+ * drop the `payload-content` / `payload-settings` caches from the outside —
+ * after a direct database edit, say — is worth the few lines it costs.
  */
 
 interface RevalidateBody {
@@ -46,11 +49,13 @@ export async function POST(request: Request) {
     // Next 16 requires a cacheLife profile as the second argument. `{ expire: 0 }`
     // keeps the Next 14 behaviour of this webhook: the tagged entries expire
     // immediately instead of being served stale while they revalidate.
-    revalidateTag('wp-content', { expire: 0 });
-    revalidateTag('wp-settings', { expire: 0 });
+    revalidateTag(CONTENT_TAG, { expire: 0 });
+    revalidateTag(SETTINGS_TAG, { expire: 0 });
     revalidatePath('/');
 
-    if (type === 'torneio') {
+    // `tournaments` is the Payload collection slug; `torneio` was the WordPress
+    // post type and is still accepted so older callers keep working.
+    if (type === 'tournaments' || type === 'torneio') {
       revalidatePath('/calendario');
     } else if (typeof slug === 'string' && slug.length > 0) {
       revalidatePath(`/noticias/${slug}`);

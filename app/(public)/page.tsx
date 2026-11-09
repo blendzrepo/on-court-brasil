@@ -6,10 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
 
-function stripHtml(html: string) {
-  return html.replace(/<[^>]+>/g, "").trim();
-}
-
 const miniGradients: Record<string, string> = {
   "Grand Slam": "from-yellow-500 to-amber-700",
   "ATP": "from-blue-500 to-blue-800",

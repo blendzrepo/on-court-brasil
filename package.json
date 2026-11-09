@@ -11,7 +11,6 @@
     "payload": "payload",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
-    "migrate:wp": "node scripts/migrate-to-wordpress.mjs",
     "migrate:payload": "payload run scripts/migrate-to-payload.mts"
   },
   "dependencies": {

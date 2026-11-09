@@ -28,8 +28,10 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ article }: NewsCardProps) {
-  const { title, body, category, publishedAt, mainImage, slug } = article;
-  const plain = stripHtml(body);
+  const { title, category, publishedAt, mainImage, slug } = article;
+  // `excerpt` is already plain text for both sources; `bodyHtml` only exists on
+  // the local JSON fallback, so stripping it is the last resort.
+  const plain = stripHtml(article.bodyHtml ?? "");
   const excerpt =
     article.excerpt || plain.slice(0, 150) + (plain.length > 150 ? "..." : "");
   const gradient = categoryGradients[category] ?? "from-gray-400 to-gray-600";

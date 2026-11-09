@@ -16,8 +16,11 @@ function stripHtml(html: string): string {
 }
 
 export default function FeaturedNews({ article }: { article: ContentArticle }) {
-  const { title, subtitle, body, category, publishedAt, mainImage, slug } = article;
-  const excerpt = article.excerpt || stripHtml(body).slice(0, 180) + "...";
+  const { title, subtitle, category, publishedAt, mainImage, slug } = article;
+  // `excerpt` is already plain text for both sources; `bodyHtml` only exists on
+  // the local JSON fallback, so stripping it is the last resort.
+  const excerpt =
+    article.excerpt || stripHtml(article.bodyHtml ?? "").slice(0, 180) + "...";
   const gradient = categoryGradients[category] ?? "from-gray-700 to-gray-900";
 
   return (

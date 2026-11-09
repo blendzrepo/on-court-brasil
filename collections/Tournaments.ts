@@ -1,4 +1,29 @@
-import type { CollectionConfig } from 'payload'
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionConfig,
+} from 'payload'
+
+import { CONTENT_TAG, purgeContentCache } from '../lib/revalidate'
+
+/** Every page that renders a tournament. */
+const TOURNAMENT_PATHS = ['/calendario'] as const
+
+/**
+ * Payload shares the Next process, so a saved tournament purges the calendar's
+ * cache in-process rather than through the `/api/revalidate` webhook.
+ */
+const revalidateTournament: CollectionAfterChangeHook = async ({ doc }) => {
+  await purgeContentCache({ tags: [CONTENT_TAG], paths: TOURNAMENT_PATHS })
+
+  return doc
+}
+
+const revalidateDeletedTournament: CollectionAfterDeleteHook = async ({ doc }) => {
+  await purgeContentCache({ tags: [CONTENT_TAG], paths: TOURNAMENT_PATHS })
+
+  return doc
+}
 
 /** The season calendar rendered on /calendario. */
 export const Tournaments: CollectionConfig = {
@@ -17,6 +42,10 @@ export const Tournaments: CollectionConfig = {
     create: ({ req: { user } }) => Boolean(user),
     update: ({ req: { user } }) => Boolean(user),
     delete: ({ req: { user } }) => Boolean(user),
+  },
+  hooks: {
+    afterChange: [revalidateTournament],
+    afterDelete: [revalidateDeletedTournament],
   },
   fields: [
     {

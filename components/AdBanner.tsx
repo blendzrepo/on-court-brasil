@@ -6,7 +6,7 @@ import type { AdSlotConfig } from "@/lib/types";
 interface AdBannerProps {
   slot: "leaderboard" | "rectangle" | "large-rectangle";
   className?: string;
-  /** Ad configuration coming from WordPress. Falls back to the placeholder. */
+  /** Ad configuration from the `site-settings` global. Falls back to the placeholder. */
   config?: AdSlotConfig;
 }
 
@@ -91,7 +91,7 @@ export default function AdBanner({ slot, className = "", config }: AdBannerProps
 
   return (
     <div className={`flex justify-center items-center ${className}`}>
-      {/* Placeholder shown until WordPress provides ad code for this slot */}
+      {/* Placeholder shown until an editor fills this slot in the admin panel */}
       <div
         className="hidden sm:flex items-center justify-center bg-gray-100 border border-dashed border-gray-300 rounded text-xs text-gray-400 font-medium select-none"
         style={{ width: w, height: h, maxWidth: "100%" }}

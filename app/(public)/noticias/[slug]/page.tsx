@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { RichText } from "@payloadcms/richtext-lexical/react";
+import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import { getContentArticleBySlug } from "@/lib/content";
 import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
 import type { Metadata } from "next";
@@ -9,9 +11,9 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// Rendered on demand with ISR rather than pre-built: WordPress content changes
-// at runtime, so a build-time `generateStaticParams` would freeze the article
-// list to whatever existed when the site was deployed.
+// Rendered on demand with ISR rather than pre-built: Payload content changes at
+// runtime, so a build-time `generateStaticParams` would freeze the article list
+// to whatever existed when the site was deployed.
 export const revalidate = 300;
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -101,11 +103,22 @@ export default async function ArticlePage(props: Props) {
         </div>
       )}
 
-      {/* Article body */}
-      <div
-        className="article-body"
-        dangerouslySetInnerHTML={{ __html: article.body }}
-      />
+      {/* Article body.
+          Payload stores Lexical JSON, which `RichText` turns into real elements
+          (`disableContainer` drops its own wrapper div so `.article-body` stays
+          the direct parent of the headings, paragraphs and quotes the prose
+          styles target). The local JSON fallback predates Payload and only has
+          HTML, so that branch keeps the old rendering. */}
+      <div className="article-body">
+        {article.body ? (
+          <RichText
+            data={article.body as unknown as SerializedEditorState}
+            disableContainer
+          />
+        ) : (
+          <div dangerouslySetInnerHTML={{ __html: article.bodyHtml ?? "" }} />
+        )}
+      </div>
     </div>
   );
 }

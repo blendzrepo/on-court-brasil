@@ -1,4 +1,16 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalAfterChangeHook, GlobalConfig } from 'payload'
+
+import { SETTINGS_TAG, purgeContentCache } from '../lib/revalidate'
+
+/**
+ * The ad slots are read by the public layout, so every page's cached output
+ * depends on them — hence a layout-wide path purge alongside the tag.
+ */
+const revalidateSettings: GlobalAfterChangeHook = async ({ doc }) => {
+  await purgeContentCache({ tags: [SETTINGS_TAG], paths: ['/'] })
+
+  return doc
+}
 
 /**
  * Single-document settings: AdSense slots and the site identity used in
@@ -14,6 +26,9 @@ export const SiteSettings: GlobalConfig = {
     // The public layout reads the ad slots, so reads must be open.
     read: () => true,
     update: ({ req: { user } }) => user?.role === 'admin',
+  },
+  hooks: {
+    afterChange: [revalidateSettings],
   },
   fields: [
     {

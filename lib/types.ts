@@ -15,39 +15,8 @@ export interface Article {
 }
 
 /* -------------------------------------------------------------------------- */
-/* WordPress (headless CMS) types                                             */
+/* Site settings                                                              */
 /* -------------------------------------------------------------------------- */
-
-/** An article coming from WordPress, already normalised for the front-end. */
-export interface WPArticle {
-  id: number;
-  slug: string;
-  title: string;
-  subtitle: string;
-  body: string; // HTML
-  excerpt: string; // plain text, HTML stripped, max 200 chars
-  mainImage: string; // '' when absent
-  category: string; // category name, '' when absent
-  categorySlug: string;
-  featured: boolean;
-  publishedAt: string; // ISO
-  updatedAt: string;
-  seoTitle: string;
-  seoDescription: string;
-}
-
-/** A tournament coming from the `torneio` custom post type. */
-export interface WPTournament {
-  id: number;
-  name: string;
-  location: string;
-  country: string;
-  startDate: string;
-  endDate: string;
-  surface: string;
-  category: string;
-  prize: string;
-}
 
 /** Configuration for a single advertising slot. */
 export interface AdSlotConfig {
@@ -55,7 +24,7 @@ export interface AdSlotConfig {
   code: string;
 }
 
-/** Site-wide settings exposed by the `occ/v1/settings` endpoint. */
+/** Site-wide settings, mapped from the Payload `site-settings` global. */
 export interface SiteSettings {
   ads: {
     leaderboard: AdSlotConfig;
