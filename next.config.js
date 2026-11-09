@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+import { withPayload } from '@payloadcms/next/withPayload';
 
 // next/image rejects any remote host that is not listed here, so the WordPress
 // host is derived from the same env var the API client uses. Without this,
@@ -18,6 +18,7 @@ if (process.env.WORDPRESS_API_URL) {
   }
 }
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
@@ -30,4 +31,6 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// withPayload wires the admin panel, its SCSS pipeline and the server-only
+// packages Payload needs to stay outside the bundle.
+export default withPayload(nextConfig, { devBundleServerPackages: false });
