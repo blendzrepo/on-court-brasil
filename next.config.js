@@ -26,6 +26,10 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
+      // Vercel Blob serves uploads from <store-id>.public.blob.vercel-storage.com,
+      // a host that changes with the store, so the subdomain has to be a wildcard.
+      // Without this entry next/image rejects every photo uploaded through the CMS.
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
       ...wpPatterns,
     ],
   },

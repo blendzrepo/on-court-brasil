@@ -5,6 +5,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { en } from '@payloadcms/translations/languages/en'
 import { pt } from '@payloadcms/translations/languages/pt'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 
@@ -16,6 +17,14 @@ import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Vercel's filesystem is ephemeral: anything the `media` collection writes to
+// `public/media` disappears on the next deploy. The Blob adapter moves uploads
+// to Vercel Blob, but only when there is a store to talk to - the token is
+// absent in local development and during the Vercel build step that runs before
+// the store is linked. `enabled: false` makes the plugin a no-op in that case,
+// so Payload keeps using `upload.staticDir` (local disk) and nothing crashes.
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN
 
 export default buildConfig({
   admin: {
@@ -51,5 +60,13 @@ export default buildConfig({
     supportedLanguages: { pt, en },
     fallbackLanguage: 'pt',
   },
-  plugins: [],
+  plugins: [
+    vercelBlobStorage({
+      enabled: Boolean(blobToken),
+      collections: {
+        media: true,
+      },
+      token: blobToken,
+    }),
+  ],
 })

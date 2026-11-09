@@ -6,8 +6,12 @@ import type { CollectionConfig } from 'payload'
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 /**
- * Uploads. Files land in `public/media` so Next serves them straight from the
- * static folder, while Payload still exposes them through `/api/media`.
+ * Uploads. With `BLOB_READ_WRITE_TOKEN` set, the Vercel Blob plugin in
+ * payload.config.ts takes over `staticDir` and stores the files in the Blob
+ * store, which is what makes them survive a deploy. Without the token the
+ * plugin is a no-op and files land in `public/media`, so Next serves them
+ * straight from the static folder. Either way Payload exposes them at
+ * `/api/media`.
  */
 export const Media: CollectionConfig = {
   slug: 'media',
