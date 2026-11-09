@@ -6,7 +6,7 @@ import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
 import type { Metadata } from "next";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 // Rendered on demand with ISR rather than pre-built: WordPress content changes
@@ -14,7 +14,8 @@ interface Props {
 // list to whatever existed when the site was deployed.
 export const revalidate = 300;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const article = await getContentArticleBySlug(params.slug);
   if (!article) return {};
 
@@ -32,7 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ArticlePage({ params }: Props) {
+export default async function ArticlePage(props: Props) {
+  const params = await props.params;
   const article = await getContentArticleBySlug(params.slug);
 
   if (!article) {

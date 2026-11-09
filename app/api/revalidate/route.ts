@@ -43,8 +43,11 @@ export async function POST(request: Request) {
 
     const { type, slug } = await readBody(request);
 
-    revalidateTag('wp-content');
-    revalidateTag('wp-settings');
+    // Next 16 requires a cacheLife profile as the second argument. `{ expire: 0 }`
+    // keeps the Next 14 behaviour of this webhook: the tagged entries expire
+    // immediately instead of being served stale while they revalidate.
+    revalidateTag('wp-content', { expire: 0 });
+    revalidateTag('wp-settings', { expire: 0 });
     revalidatePath('/');
 
     if (type === 'torneio') {

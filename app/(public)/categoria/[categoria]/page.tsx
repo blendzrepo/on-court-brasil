@@ -35,7 +35,8 @@ export function generateStaticParams() {
   return Object.keys(CATEGORIES).map((categoria) => ({ categoria }));
 }
 
-export function generateMetadata({ params }: { params: { categoria: string } }) {
+export async function generateMetadata(props: { params: Promise<{ categoria: string }> }) {
+  const params = await props.params;
   const cat = CATEGORIES[params.categoria];
   if (!cat) return { title: "Categoria | On Court Brasil" };
   return {
@@ -44,7 +45,8 @@ export function generateMetadata({ params }: { params: { categoria: string } }) 
   };
 }
 
-export default async function CategoriaPage({ params }: { params: { categoria: string } }) {
+export default async function CategoriaPage(props: { params: Promise<{ categoria: string }> }) {
+  const params = await props.params;
   const cat = CATEGORIES[params.categoria];
   if (!cat) notFound();
 
