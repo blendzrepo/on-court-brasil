@@ -328,17 +328,6 @@ export const tournaments: Tournament[] = [
     prize: "€ 600.000",
   },
   {
-    id: "t-21",
-    name: "Rio Open",
-    location: "Rio de Janeiro",
-    country: "Brasil",
-    startDate: "2026-02-16",
-    endDate: "2026-02-22",
-    surface: "Saibro",
-    category: "ATP 500",
-    prize: "R$ 3.400.000",
-  },
-  {
     id: "t-22",
     name: "Estoril Open",
     location: "Estoril",

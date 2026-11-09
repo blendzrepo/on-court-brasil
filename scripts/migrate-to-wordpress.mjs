@@ -377,20 +377,25 @@ const LABELS = {
   tournaments: 'Torneios',
 };
 
+/** Rótulo de status com largura fixa, para as colunas ficarem alinhadas. */
+function statusTag(symbol, word) {
+  return `${symbol} ${word.padEnd(11)}`;
+}
+
 function recordCreated(kind, label, dryRun) {
   report[kind].created += 1;
-  console.log(`  ${dryRun ? '→ criaria  ' : '✓ criado   '} ${label}`);
+  console.log(`  ${dryRun ? statusTag('→', 'criaria') : statusTag('✓', 'criado')} ${label}`);
 }
 
 function recordUpdated(kind, label, dryRun) {
   report[kind].updated += 1;
-  console.log(`  ${dryRun ? '→ atualizaria' : '↻ atualizado'} ${label}`);
+  console.log(`  ${dryRun ? statusTag('→', 'atualizaria') : statusTag('↻', 'atualizado')} ${label}`);
 }
 
 function recordFailed(kind, label, reason) {
   report[kind].failed += 1;
   failures.push({ kind, label, reason });
-  console.log(`  ⨯ falhou    ${label} — ${reason}`);
+  console.log(`  ${statusTag('⨯', 'falhou')} ${label} — ${reason}`);
 }
 
 function printSummary(dryRun) {

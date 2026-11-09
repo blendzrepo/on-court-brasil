@@ -32,6 +32,7 @@ require_once OCC_PLUGIN_DIR . 'includes/meta-boxes.php';
 require_once OCC_PLUGIN_DIR . 'includes/settings.php';
 require_once OCC_PLUGIN_DIR . 'includes/rest.php';
 require_once OCC_PLUGIN_DIR . 'includes/revalidate.php';
+require_once OCC_PLUGIN_DIR . 'includes/uploads.php';
 
 /**
  * Carrega as traduções do plugin.
