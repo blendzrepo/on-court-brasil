@@ -45,7 +45,15 @@ export default buildConfig({
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      // Vercel's Neon integration injects POSTGRES_URL and DATABASE_URL rather
+      // than DATABASE_URI, so accept those too and no env var has to be copied
+      // by hand. The pooled URLs come first: serverless functions open a
+      // connection per invocation and would exhaust a direct connection limit.
+      connectionString:
+        process.env.DATABASE_URI ||
+        process.env.POSTGRES_URL ||
+        process.env.DATABASE_URL ||
+        '',
     },
   }),
   secret: process.env.PAYLOAD_SECRET || '',
