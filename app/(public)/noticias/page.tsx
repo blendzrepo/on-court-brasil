@@ -1,4 +1,4 @@
-import { getArticles } from "@/lib/db";
+import { getContentArticles } from "@/lib/content";
 import NewsCard from "@/components/NewsCard";
 
 export const metadata = {
@@ -6,8 +6,8 @@ export const metadata = {
   description: "Todas as notícias de tênis do mundo em português.",
 };
 
-export default function NoticiasPage() {
-  const articles = getArticles().filter((a) => a.published);
+export default async function NoticiasPage() {
+  const articles = await getContentArticles();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

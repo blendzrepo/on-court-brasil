@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getArticles, getArticleBySlug } from "@/lib/db";
+import { getContentArticleBySlug } from "@/lib/content";
 import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
 import type { Metadata } from "next";
 
@@ -9,26 +9,33 @@ interface Props {
   params: { slug: string };
 }
 
-export async function generateStaticParams() {
-  const articles = getArticles();
-  return articles
-    .filter((a) => a.published)
-    .map((a) => ({ slug: a.slug }));
-}
+// Rendered on demand with ISR rather than pre-built: WordPress content changes
+// at runtime, so a build-time `generateStaticParams` would freeze the article
+// list to whatever existed when the site was deployed.
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const article = getArticleBySlug(params.slug);
+  const article = await getContentArticleBySlug(params.slug);
   if (!article) return {};
+
+  const title = article.seoTitle || article.title;
+  const description = article.seoDescription || article.excerpt;
+
   return {
-    title: `${article.title} | On Court Brasil`,
-    description: article.subtitle,
+    title: `${title} | On Court Brasil`,
+    description,
+    openGraph: {
+      title,
+      description,
+      ...(article.mainImage ? { images: [{ url: article.mainImage }] } : {}),
+    },
   };
 }
 
-export default function ArticlePage({ params }: Props) {
-  const article = getArticleBySlug(params.slug);
+export default async function ArticlePage({ params }: Props) {
+  const article = await getContentArticleBySlug(params.slug);
 
-  if (!article || !article.published) {
+  if (!article) {
     notFound();
   }
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Article } from "@/lib/types";
+import type { ContentArticle } from "@/lib/content";
 import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
 
 const categoryGradients: Record<string, string> = {
@@ -15,9 +15,9 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]+>/g, "").trim();
 }
 
-export default function FeaturedNews({ article }: { article: Article }) {
+export default function FeaturedNews({ article }: { article: ContentArticle }) {
   const { title, subtitle, body, category, publishedAt, mainImage, slug } = article;
-  const excerpt = stripHtml(body).slice(0, 180) + "...";
+  const excerpt = article.excerpt || stripHtml(body).slice(0, 180) + "...";
   const gradient = categoryGradients[category] ?? "from-gray-700 to-gray-900";
 
   return (

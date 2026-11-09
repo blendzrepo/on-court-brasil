@@ -403,7 +403,9 @@ export function formatDateRangePT(start: string, end: string): string {
   return `${startDay} – ${endDay}`;
 }
 
-export function getCategoryBadgeClass(category: NewsCategory): string {
+// Accepts a plain string because categories coming from WordPress are free-form
+// taxonomy names, not the fixed `NewsCategory` union of the legacy JSON store.
+export function getCategoryBadgeClass(category: NewsCategory | string): string {
   switch (category) {
     case "Grand Slam":
       return "badge-grand-slam";

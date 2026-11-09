@@ -1,4 +1,4 @@
-import { getArticles } from "@/lib/db";
+import { getContentArticles, getContentSettings } from "@/lib/content";
 import FeaturedNews from "@/components/FeaturedNews";
 import NewsCard from "@/components/NewsCard";
 import AdBanner from "@/components/AdBanner";
@@ -18,10 +18,14 @@ const miniGradients: Record<string, string> = {
   "Internacional": "from-purple-500 to-violet-700",
 };
 
-export default function HomePage() {
-  const allArticles = getArticles().filter((a) => a.published);
+export default async function HomePage() {
+  const [allArticles, settings] = await Promise.all([
+    getContentArticles(),
+    getContentSettings(),
+  ]);
+
   const featured = allArticles.find((a) => a.featured) ?? allArticles[0];
-  const rest = allArticles.filter((a) => a.id !== featured.id);
+  const rest = featured ? allArticles.filter((a) => a.id !== featured.id) : allArticles;
   const highlights = rest.slice(0, 3);
   const latest = rest.slice(3, 9);
 
@@ -29,15 +33,17 @@ export default function HomePage() {
     <>
       {/* Ad slot 1 — Leaderboard */}
       <div className="bg-gray-50 border-b border-gray-200 py-3">
-        <AdBanner slot="leaderboard" />
+        <AdBanner slot="leaderboard" config={settings.ads.leaderboard} />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Hero Featured */}
-        <section className="mb-8">
-          <FeaturedNews article={featured} />
-        </section>
+        {featured && (
+          <section className="mb-8">
+            <FeaturedNews article={featured} />
+          </section>
+        )}
 
         {/* Secondary highlights row */}
         <section className="mb-8">
@@ -71,7 +77,7 @@ export default function HomePage() {
 
         {/* Ad slot 2 — Rectangle */}
         <div className="flex justify-center mb-8">
-          <AdBanner slot="rectangle" />
+          <AdBanner slot="rectangle" config={settings.ads.rectangle} />
         </div>
 
         {/* Latest news */}
@@ -94,7 +100,7 @@ export default function HomePage() {
 
         {/* Ad slot 3 — Large rectangle */}
         <div className="flex justify-center mb-10">
-          <AdBanner slot="large-rectangle" />
+          <AdBanner slot="large-rectangle" config={settings.ads.large_rectangle} />
         </div>
 
         {/* CTA Calendar */}

@@ -1,4 +1,4 @@
-import { getArticles } from "@/lib/db";
+import { getContentArticlesByCategory } from "@/lib/content";
 import NewsCard from "@/components/NewsCard";
 import type { NewsCategory } from "@/lib/types";
 import { notFound } from "next/navigation";
@@ -44,13 +44,11 @@ export function generateMetadata({ params }: { params: { categoria: string } }) 
   };
 }
 
-export default function CategoriaPage({ params }: { params: { categoria: string } }) {
+export default async function CategoriaPage({ params }: { params: { categoria: string } }) {
   const cat = CATEGORIES[params.categoria];
   if (!cat) notFound();
 
-  const articles = getArticles().filter(
-    (a) => a.published && a.category === cat.name
-  );
+  const articles = await getContentArticlesByCategory(cat.name);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Article } from "@/lib/types";
+import type { ContentArticle } from "@/lib/content";
 import { getCategoryBadgeClass, formatDatePT } from "@/lib/mockData";
 
 const categoryGradients: Record<string, string> = {
@@ -24,12 +24,14 @@ function stripHtml(html: string): string {
 }
 
 interface NewsCardProps {
-  article: Article;
+  article: ContentArticle;
 }
 
 export default function NewsCard({ article }: NewsCardProps) {
   const { title, body, category, publishedAt, mainImage, slug } = article;
-  const excerpt = stripHtml(body).slice(0, 150) + (stripHtml(body).length > 150 ? "..." : "");
+  const plain = stripHtml(body);
+  const excerpt =
+    article.excerpt || plain.slice(0, 150) + (plain.length > 150 ? "..." : "");
   const gradient = categoryGradients[category] ?? "from-gray-400 to-gray-600";
   const emoji = categoryEmoji[category] ?? "🎾";
 
