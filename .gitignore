@@ -12,3 +12,6 @@ out/
 
 # OS
 .DS_Store
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
